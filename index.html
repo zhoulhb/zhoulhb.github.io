@@ -273,7 +273,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/blog/Plan.html" itemprop="url">Plan</a></h1>
+                <a class="post-title-link" href="/blog/Plan.html" itemprop="url">rabbitmq添加虚拟主机</a></h1>
         
 
         <div class="post-meta">
@@ -337,15 +337,10 @@
       
         
           
-          这是一片测试文章 乱写的
-1# apt-get install nginx
-每个人的际遇不同，成功总有早晚。
-但肯定离不开两样东西，一样是努力，另一样就是格局。
-不要总羡慕别人走运，嫉妒别人成功。平时不努力，就算运气来了，你也招架不住。
-——非主流的蓝袜子
-我要上传图片
-
-          
+          创建用户（如果没有的话）
+1# rabbitmqctl  add_user test 123456                 --用户：test，密码：123456
+创建虚拟主机1# rabbitmqctl add_vhost test_host                   --虚拟主
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/blog/Plan.html#more" rel="contents">

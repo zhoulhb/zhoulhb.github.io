@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://6324up.xyz/"/>
-  <updated>2018-03-09T01:20:50.399Z</updated>
+  <updated>2018-07-18T09:34:54.239Z</updated>
   <id>http://6324up.xyz/</id>
   
   <author>
@@ -17,19 +17,19 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Plan</title>
+    <title>rabbitmq添加虚拟主机</title>
     <link href="http://6324up.xyz//blog/Plan.html"/>
     <id>http://6324up.xyz//blog/Plan.html</id>
     <published>2018-03-08T08:27:00.000Z</published>
-    <updated>2018-03-09T01:20:50.399Z</updated>
+    <updated>2018-07-18T09:34:54.239Z</updated>
     
-    <content type="html"><![CDATA[<p>这是一片测试文章 乱写的</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get install nginx</span></span><br></pre></td></tr></table></figure><p>每个人的际遇不同，成功总有早晚。</p><p>但肯定离不开两样东西，一样是努力，另一样就是格局。</p><p>不要总羡慕别人走运，嫉妒别人成功。平时不努力，就算运气来了，你也招架不住。</p><p>——非主流的蓝袜子</p><p>我要上传图片</p>]]></content>
+    <content type="html"><![CDATA[<p>创建用户（如果没有的话）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl  add_user test 123456                 --用户：test，密码：123456</span></span><br></pre></td></tr></table></figure><p>创建虚拟主机<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host</span></span><br></pre></td></tr></table></figure></p><p>查看虚拟主机列表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl list_vhosts</span></span><br></pre></td></tr></table></figure></p><p>配置用户权限（此处为读写权限）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl set_permissions -p test_host  test ".*" ".*" ".*"         --用户test对test_host虚拟主机具有读写权限</span></span><br></pre></td></tr></table></figure></p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;这是一片测试文章 乱写的&lt;/p&gt;
+        &lt;p&gt;创建用户（如果没有的话）&lt;/p&gt;
 &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;c
       
     

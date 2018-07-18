@@ -81,17 +81,17 @@
 
 
 
-<meta name="description" content="这是一片测试文章 乱写的 1# apt-get install nginx 每个人的际遇不同，成功总有早晚。 但肯定离不开两样东西，一样是努力，另一样就是格局。 不要总羡慕别人走运，嫉妒别人成功。平时不努力，就算运气来了，你也招架不住。 ——非主流的蓝袜子 我要上传图片">
+<meta name="description" content="创建用户（如果没有的话） 1# rabbitmqctl  add_user test 123456                 --用户：test，密码：123456 创建虚拟主机1# rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host 查看虚拟主机列表1# rabbitmqctl list_vhosts 配置">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Plan">
+<meta property="og:title" content="rabbitmq添加虚拟主机">
 <meta property="og:url" content="http://6324up.xyz/blog/Plan.html">
 <meta property="og:site_name" content="Supreme">
-<meta property="og:description" content="这是一片测试文章 乱写的 1# apt-get install nginx 每个人的际遇不同，成功总有早晚。 但肯定离不开两样东西，一样是努力，另一样就是格局。 不要总羡慕别人走运，嫉妒别人成功。平时不努力，就算运气来了，你也招架不住。 ——非主流的蓝袜子 我要上传图片">
+<meta property="og:description" content="创建用户（如果没有的话） 1# rabbitmqctl  add_user test 123456                 --用户：test，密码：123456 创建虚拟主机1# rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host 查看虚拟主机列表1# rabbitmqctl list_vhosts 配置">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-09T01:20:50.399Z">
+<meta property="og:updated_time" content="2018-07-18T09:34:54.239Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Plan">
-<meta name="twitter:description" content="这是一片测试文章 乱写的 1# apt-get install nginx 每个人的际遇不同，成功总有早晚。 但肯定离不开两样东西，一样是努力，另一样就是格局。 不要总羡慕别人走运，嫉妒别人成功。平时不努力，就算运气来了，你也招架不住。 ——非主流的蓝袜子 我要上传图片">
+<meta name="twitter:title" content="rabbitmq添加虚拟主机">
+<meta name="twitter:description" content="创建用户（如果没有的话） 1# rabbitmqctl  add_user test 123456                 --用户：test，密码：123456 创建虚拟主机1# rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host 查看虚拟主机列表1# rabbitmqctl list_vhosts 配置">
 
 
 
@@ -127,7 +127,7 @@
 
 
 
-  <title>Plan | Supreme</title>
+  <title>rabbitmq添加虚拟主机 | Supreme</title>
   
 
 
@@ -271,7 +271,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Plan</h1>
+          <h1 class="post-title" itemprop="name headline">rabbitmq添加虚拟主机</h1>
         
 
         <div class="post-meta">
@@ -333,13 +333,11 @@
       
 
       
-        <p>这是一片测试文章 乱写的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get install nginx</span></span><br></pre></td></tr></table></figure>
-<p>每个人的际遇不同，成功总有早晚。</p>
-<p>但肯定离不开两样东西，一样是努力，另一样就是格局。</p>
-<p>不要总羡慕别人走运，嫉妒别人成功。平时不努力，就算运气来了，你也招架不住。</p>
-<p>——非主流的蓝袜子</p>
-<p>我要上传图片</p>
+        <p>创建用户（如果没有的话）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl  add_user test 123456                 --用户：test，密码：123456</span></span><br></pre></td></tr></table></figure>
+<p>创建虚拟主机<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host</span></span><br></pre></td></tr></table></figure></p>
+<p>查看虚拟主机列表<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl list_vhosts</span></span><br></pre></td></tr></table></figure></p>
+<p>配置用户权限（此处为读写权限）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rabbitmqctl set_permissions -p test_host  test ".*" ".*" ".*"         --用户test对test_host虚拟主机具有读写权限</span></span><br></pre></td></tr></table></figure></p>
 
       
     </div>
