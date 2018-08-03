@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://6324up.xyz/"/>
-  <updated>2018-07-20T12:11:32.032Z</updated>
-  <id>http://6324up.xyz/</id>
+  <link href="http://zhoul.cc/"/>
+  <updated>2018-08-03T06:12:44.464Z</updated>
+  <id>http://zhoul.cc/</id>
   
   <author>
     <name>周琳</name>
@@ -17,9 +17,30 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>lamba表达式</title>
+    <link href="http://zhoul.cc//blog/lamba%E5%87%BD%E6%95%B0.html"/>
+    <id>http://zhoul.cc//blog/lamba函数.html</id>
+    <published>2018-08-03T02:01:22.000Z</published>
+    <updated>2018-08-03T06:12:44.464Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="lamba表达式"><a href="#lamba表达式" class="headerlink" title="lamba表达式"></a>lamba表达式</h3><p>可以使用 Lambda 表达式创建匿名函数，即没有名称的函数。lambda 表达式非常适合快速创建在代码中以后不会用到的函数。尤其对高阶函数或将其他函数作为参数的函数来说，非常实用。</p><p>例如，可以使用 lambda 表达式将以下函数<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multiply</span><span class="params">(x, y)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x * y</span><br></pre></td></tr></table></figure></p><p>简写为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">double = <span class="keyword">lambda</span> x, y: x * y</span><br></pre></td></tr></table></figure></p><h5 id="Lambda-函数的组成部分"><a href="#Lambda-函数的组成部分" class="headerlink" title="Lambda 函数的组成部分"></a>Lambda 函数的组成部分</h5><p>1.关键字 lambda 表示这是一个 lambda 表达式。</p><p>2.lambda 之后是该匿名函数的一个或多个参数（用英文逗号分隔），然后是一个英文冒号 :。和函数相似，lambda 表达式中的参数名称是随意的。</p><p>3.最后一部分是被评估并在该函数中返回的表达式，和你可能会在函数中看到的 return 语句很像。</p><p>鉴于这种结构，lambda 表达式不太适合复杂的函数，但是非常适合简短的函数。</p><h5 id="练习：Lambda-与-Map"><a href="#练习：Lambda-与-Map" class="headerlink" title="练习：Lambda 与 Map"></a>练习：Lambda 与 Map</h5><p>map() 是一个高阶内置函数，接受函数和可迭代对象作为输入，并返回一个将该函数应用到可迭代对象的每个元素的迭代器。下面的代码使用 map() 计算 numbers 中每个列表的均值，并创建列表 averages。测试运行这段代码，看看结果如何。</p><p>通过将 mean 函数替换为在 map() 的调用中定义的 lambda 表达式，重写这段代码，使代码更简练。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">numbers = [</span><br><span class="line">              [<span class="number">34</span>, <span class="number">63</span>, <span class="number">88</span>, <span class="number">71</span>, <span class="number">29</span>],</span><br><span class="line">              [<span class="number">90</span>, <span class="number">78</span>, <span class="number">51</span>, <span class="number">27</span>, <span class="number">45</span>],</span><br><span class="line">              [<span class="number">63</span>, <span class="number">37</span>, <span class="number">85</span>, <span class="number">46</span>, <span class="number">22</span>],</span><br><span class="line">              [<span class="number">51</span>, <span class="number">22</span>, <span class="number">34</span>, <span class="number">11</span>, <span class="number">18</span>]</span><br><span class="line">           ]</span><br><span class="line"></span><br><span class="line"><span class="comment">#def mean(num_list):</span></span><br><span class="line"><span class="comment">#    return sum(num_list) / len(num_list)</span></span><br><span class="line"></span><br><span class="line">averages = list(map(<span class="keyword">lambda</span> x: sum(x) / len(x), numbers))</span><br><span class="line">print(averages)</span><br></pre></td></tr></table></figure></p><h5 id="练习：Lambda-与-Filter"><a href="#练习：Lambda-与-Filter" class="headerlink" title="练习：Lambda 与 Filter"></a>练习：Lambda 与 Filter</h5><p>filter() 是一个高阶内置函数，接受函数和可迭代对象作为输入，并返回一个由可迭代对象中的特定元素（该函数针对该元素会返回 True）组成的迭代器。下面的代码使用 filter() 从 cities 中获取长度少于 10 个字符的名称以创建列表 short_cities。测试运行这段代码，看看结果如何。</p><p>通过将 is_short 函数替换为在 filter() 的调用中定义的 lambda 表达式，重写这段代码，使代码更简练。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cities = [<span class="string">"New York City"</span>, <span class="string">"Los Angeles"</span>, <span class="string">"Chicago"</span>, <span class="string">"Mountain View"</span>, <span class="string">"Denver"</span>, <span class="string">"Boston"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">#def is_short(name):</span></span><br><span class="line"> <span class="comment">#   return len(name) &lt; 10</span></span><br><span class="line"></span><br><span class="line">short_cities = list(filter(<span class="keyword">lambda</span> x: len(x) &lt; <span class="number">10</span>, cities))</span><br><span class="line">print(short_cities)</span><br></pre></td></tr></table></figure></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;lamba表达式&quot;&gt;&lt;a href=&quot;#lamba表达式&quot; class=&quot;headerlink&quot; title=&quot;lamba表达式&quot;&gt;&lt;/a&gt;lamba表达式&lt;/h3&gt;&lt;p&gt;可以使用 Lambda 表达式创建匿名函数，即没有名称的函数。lambda 表达式非常适合快
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>iptables</title>
-    <link href="http://6324up.xyz//blog/Untitled.html"/>
-    <id>http://6324up.xyz//blog/Untitled.html</id>
+    <link href="http://zhoul.cc//blog/Untitled.html"/>
+    <id>http://zhoul.cc//blog/Untitled.html</id>
     <published>2018-07-20T06:20:07.000Z</published>
     <updated>2018-07-20T12:11:32.032Z</updated>
     
@@ -39,8 +60,8 @@
   
   <entry>
     <title>SVN</title>
-    <link href="http://6324up.xyz//blog/hello-world.html"/>
-    <id>http://6324up.xyz//blog/hello-world.html</id>
+    <link href="http://zhoul.cc//blog/hello-world.html"/>
+    <id>http://zhoul.cc//blog/hello-world.html</id>
     <published>2018-07-18T10:16:00.000Z</published>
     <updated>2018-07-18T10:47:45.214Z</updated>
     
@@ -61,8 +82,8 @@
   
   <entry>
     <title>rabbitmq添加虚拟主机</title>
-    <link href="http://6324up.xyz//blog/Plan.html"/>
-    <id>http://6324up.xyz//blog/Plan.html</id>
+    <link href="http://zhoul.cc//blog/Plan.html"/>
+    <id>http://zhoul.cc//blog/Plan.html</id>
     <published>2018-03-08T08:27:00.000Z</published>
     <updated>2018-07-18T10:15:38.606Z</updated>
     
