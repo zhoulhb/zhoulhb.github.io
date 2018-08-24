@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+
+
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Supreme" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="环境  所有业务均运行于docker中，通过k8s集群统一管理。业务所需数据库，缓存，消息队列等服务有运行于docker中（k8s-yaml/docker单独启动），也有运行于宿主机中。k8s集群上运行的应用的配置和日志文件则统一挂载在mfs文件系统中。启动k8s前一定要保证依赖服务全部正常运行。  涉及服务   k8s 数据库 转发/代理 zookeeper    启动步骤 1.首先启动192.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="测试环境重启">
+<meta property="og:url" content="http://zhoul.cc/blog/测试环境重启.html">
+<meta property="og:site_name" content="Supreme">
+<meta property="og:description" content="环境  所有业务均运行于docker中，通过k8s集群统一管理。业务所需数据库，缓存，消息队列等服务有运行于docker中（k8s-yaml/docker单独启动），也有运行于宿主机中。k8s集群上运行的应用的配置和日志文件则统一挂载在mfs文件系统中。启动k8s前一定要保证依赖服务全部正常运行。  涉及服务   k8s 数据库 转发/代理 zookeeper    启动步骤 1.首先启动192.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://zhoul.cc/images/QQ图片20180810154141.png">
+<meta property="og:updated_time" content="2018-08-15T04:16:21.086Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="测试环境重启">
+<meta name="twitter:description" content="环境  所有业务均运行于docker中，通过k8s集群统一管理。业务所需数据库，缓存，消息队列等服务有运行于docker中（k8s-yaml/docker单独启动），也有运行于宿主机中。k8s集群上运行的应用的配置和日志文件则统一挂载在mfs文件系统中。启动k8s前一定要保证依赖服务全部正常运行。  涉及服务   k8s 数据库 转发/代理 zookeeper    启动步骤 1.首先启动192.">
+<meta name="twitter:image" content="http://zhoul.cc/images/QQ图片20180810154141.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhoul.cc/blog/测试环境重启.html"/>
+
+
+
+
+
+  <title>测试环境重启 | Supreme</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Supreme</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhoul.cc/blog/测试环境重启.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="周琳">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Supreme">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">测试环境重启</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-10T13:40:00+08:00">
+                2018-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统/" itemprop="url" rel="index">
+                    <span itemprop="name">系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/blog/测试环境重启.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="/blog/测试环境重启.html" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>环境</strong></p>
+<blockquote>
+<p>所有业务均运行于<code>docker</code>中，通过<code>k8s</code>集群统一管理。业务所需数据库，缓存，消息队列等服务有运行于<code>docker</code>中（k8s-yaml/docker单独启动），也有运行于宿主机中。k8s集群上运行的应用的配置和日志文件则统一挂载在<code>mfs</code>文件系统中。启动k8s前一定要保证依赖服务全部正常运行。</p>
+</blockquote>
+<p><strong>涉及服务</strong></p>
+<blockquote>
+<ul>
+<li>k8s</li>
+<li>数据库</li>
+<li>转发/代理</li>
+<li>zookeeper</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="启动步骤"><a href="#启动步骤" class="headerlink" title="启动步骤"></a>启动步骤</h2><blockquote>
+<p>1.<strong>首先启动192.168.5.4，dnsmasq</strong><br>2.启动<code>基础服务</code>服务器<br>3.启动mfs集群服务器，顺序：mfsmaster –&gt; metalogger –&gt; chunkserver<br>4.启动k8s集群，顺序：k8s-master –&gt; k8s-masterback –&gt; node<br>6.k8s-master1启动服务，顺序：keepalived –&gt; mfs挂载 –&gt; iptables –&gt; docker –&gt; nginx<br>7.k8s-master2，k8s-node等，顺序：mfs挂载 –&gt; iptables –&gt; docker</p>
+</blockquote>
+<h3 id="1-启动DNS"><a href="#1-启动DNS" class="headerlink" title="1.启动DNS"></a>1.启动DNS</h3><blockquote>
+<p>服务器：<code>192.168.5.4</code><br>某些服务器和容器dns配置的是公司内部DNS，如果dns不启动，会出现网络故障</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo /usr/sbin/dnsmasq -r /etc/resolv.dnsmasq.conf</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ps -ef |grep dnsmasq</span></span><br></pre></td></tr></table></figure>
+<p><code>启动其他代理</code><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 手动执行rc.local文件中的ssh相关命令</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vim /etc/rc.local</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="2-mfs和nfs"><a href="#2-mfs和nfs" class="headerlink" title="2.mfs和nfs"></a>2.mfs和nfs</h2><p><code>mfs集群</code></p>
+<blockquote>
+<p><strong>备份集群</strong><br>登录192.168.4.139:9425查看集群状态<br>master : 192.168.4.139<br>metalogger : 192.168.4.140<br>chunkserver : 其他</p>
+</blockquote>
+<blockquote>
+<p><strong>业务集群</strong><br>登录192.168.5.71:9425查看集群状态<br>master : 192.168.5.71<br>metalogger : 192.168.5.72<br>chunkserver : 192.168.5.50(nfs)</p>
+</blockquote>
+<h2 id="3-jenkins-web"><a href="#3-jenkins-web" class="headerlink" title="3. jenkins-web"></a>3. jenkins-web</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 192.168.4.193</span></span><br><span class="line">$ sudo<span class="built_in"> service </span>nginx start</span><br></pre></td></tr></table></figure>
+<h2 id="4-启动基础服务"><a href="#4-启动基础服务" class="headerlink" title="4.启动基础服务"></a>4.启动基础服务</h2><h3 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h3><p><code>xdgc-redis</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 192.168.7.7,xdgc-sso服务使用</span></span><br><span class="line">/opt/redis3/bin/redis-server /opt/redis3/redis.conf &amp;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.7.7，sso依赖服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker start ssorest cas</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> cas服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker <span class="built_in">exec</span> -it ssorest bash   </span></span><br><span class="line">/root/tomcat7-rest/bin/startup.sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> ssorest服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker <span class="built_in">exec</span> -it cas bash</span></span><br><span class="line">/root/tomcat8/bin/catalina.sh start</span><br></pre></td></tr></table></figure>
+<p><code>datag组redis</code><br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 192.168.4.122</span></span><br><span class="line">$ sudo docker <span class="builtin-name">run</span> -p 6379:6379 <span class="attribute">--restart</span>=always -v /home/ubuntu/redis.conf:/data/redis.conf -d  --name dev_redis redis:3.2 redis-server /data/redis.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 192.168.4.42</span></span><br><span class="line">service redis-server restart</span><br><span class="line"></span><br><span class="line"><span class="comment"># 192.168.4.41</span></span><br><span class="line">service redis-server restart</span><br></pre></td></tr></table></figure></p>
+<h2 id="mongo"><a href="#mongo" class="headerlink" title="mongo"></a>mongo</h2><p><code>datag组mongo</code><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.122</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker run -it -d --name=mongo-28000 -v /data/mongo-28000/configdb:/data/configdb -v /data/mongo-28000/db:/data/db -p 28000:27017 --restart=always mongo:3.0.15</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.42，dg组开发环境</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker restart dg-mongo</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker run -it -d --name=dg-mongo -h dg-mongo -p 27017:27017 -v /data/mongodb/data:/data/db -v /data/mongodb/<span class="built_in">log</span>:/data/<span class="built_in">log</span>  regtest.yuanbaopu.com/xdgc/mongo:3.0.14</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.41</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker restart xdgc-mongo</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##</span></span></span><br><span class="line">本地mongodb web工具： http://adminmongo.yuanbaopu.com/dbApp/app/login</span><br><span class="line">密码：admin</span><br></pre></td></tr></table></figure></p>
+<h2 id="rabbitmq"><a href="#rabbitmq" class="headerlink" title="rabbitmq"></a>rabbitmq</h2><p><code>192.168.5.46</code><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> xdgc rabbitmq</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> service rabbitmq-server restart</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> datag rabbitmq</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker restart dg_rabbitmq</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##</span></span></span><br><span class="line">本地datag rabbitmq管理页面：http://192.168.5.46:35673/#/</span><br><span class="line">账密：dgbox dgbox2016</span><br></pre></td></tr></table></figure></p>
+<p><code>192.168.4.122</code><br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run -it -d --restart=always -p <span class="number">5672</span>:<span class="number">5672</span> -p <span class="number">15672</span>:<span class="number">15672</span> -h rabbitmq --name rabbitmq -v /app/<span class="symbol">rabbitmq:</span>/var/<span class="class"><span class="keyword">lib</span>/<span class="title">rabbitmq</span> <span class="title">regtest</span>.<span class="title">yuanbaopu</span>.<span class="title">com</span>/<span class="title">datag</span>/<span class="title">rabbitmq</span>:3.6.8<span class="title">v2</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><p><code>本地开发</code><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.122，dg组本地开发</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo docker run --restart=always -h mysql  --name mysql -p 3306:3306 -v /app/mysqldb:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=datag -d mysql:5.5</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.50,zabbix</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo /etc/init.d/mysql start</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.25,市民卡master</span></span><br><span class="line">/etc/init.d/mysql start</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.46,市民卡slave</span></span><br><span class="line">/etc/init.d/mysqld start</span><br></pre></td></tr></table></figure></p>
+<h2 id="zookeeper"><a href="#zookeeper" class="headerlink" title="zookeeper"></a>zookeeper</h2><p><code>测试集群</code><br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">192.168</span><span class="number">.5</span><span class="number">.43</span>,节点<span class="number">1</span></span><br><span class="line">$ sudo /opt/zookeeper<span class="number">-3.4</span><span class="number">.8</span>/bin/zkServer.sh start/stop</span><br><span class="line"></span><br><span class="line"># <span class="number">192.168</span><span class="number">.4</span><span class="number">.42</span>,节点<span class="number">2</span></span><br><span class="line">$ sudo /opt/zookeeper<span class="number">-3.4</span><span class="number">.8</span>/bin/zkServer.sh start/stop</span><br><span class="line"></span><br><span class="line"># <span class="number">192.168</span><span class="number">.4</span><span class="number">.41</span>,节点<span class="number">3</span></span><br><span class="line">$ sudo /opt/zookeeper<span class="number">-3.4</span><span class="number">.8</span>/bin/zkServer.sh start/stop</span><br></pre></td></tr></table></figure></p>
+<p><code>内网可用连接</code><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.193,迁移</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo /opt/qianyi_zookeeper/bin/zkServer.sh start/stop</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.193,测试</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo /opt/test_zookeeper/bin/zkServer.sh start/stop</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.193,开发</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo /opt/zookeeper-3.4.6/bin/zkServer.sh start/stop</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 192.168.4.193,数据贷</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo /opt/sjd_zookeeper/bin/zkServer.sh start/stop</span></span><br></pre></td></tr></table></figure></p>
+<p><code>zookeeper-web</code></p>
+<blockquote>
+<p>运行jenkins发布</p>
+</blockquote>
+<p><img src="/images/QQ图片20180810154141.png" alt="“图片描述”"></p>
+<p>检测web端是否运行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo ss -tunlp|grep 8901</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo ss -tunlp|grep 3009</span></span><br></pre></td></tr></table></figure></p>
+<p>如果web能显示不能打开，运行以下命令<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nohup java -Dresources.dir=resources/ -jar xdgc_openapi<span class="selector-class">.jar</span> --spring<span class="selector-class">.config</span><span class="selector-class">.location</span>=resources/ &amp;</span><br></pre></td></tr></table></figure></p>
+<p>另外,不知道是否需要运行node-zk<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /opt/<span class="keyword">node</span><span class="title">-zk-browser</span>/<span class="literal">start</span>.sh</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-k8s集群"><a href="#5-k8s集群" class="headerlink" title="5. k8s集群"></a>5. k8s集群</h2><p><code>k8s-master1</code></p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 挂载，先切换至root用户sudo su</span></span><br><span class="line"><span class="string">/usr/bin/mfsmount</span> -o nonempty <span class="string">/data</span> -H mfsmaster</span><br><span class="line"></span><br><span class="line">mount -t nfs -o rw,hard,nointr,noac,vers=3,rsize=32768,wsize=32768 192.168.5.50:<span class="string">/mnt/nfs/logs</span> <span class="string">/data/logs</span></span><br><span class="line">nohup <span class="string">/home/ubuntu/xdgc_sms/bin/exec.sh</span> &amp;</span><br><span class="line"></span><br><span class="line">mount -t cifs -o username=logs,password=123456 <span class="string">//192.168.4.124/logs</span> <span class="string">/data/logs/datag_dgafterloan_worker/4.124</span></span><br><span class="line"></span><br><span class="line">mount -t cifs -o username=logs,password=123456 <span class="string">//192.168.4.117/logs</span> <span class="string">/data/logs/datag_dgtax_worker/4.117</span></span><br><span class="line"></span><br><span class="line">mount -t cifs -o username=logs,password=123456 <span class="string">//192.168.4.171/logs</span> <span class="string">/data/logs/datag_dgtax_worker/4.171</span></span><br><span class="line"></span><br><span class="line">mount -t cifs -o username=logs,password=123456 <span class="string">//192.168.4.170/logs</span> <span class="string">/data/logs/datag_jd_worker/4.170</span></span><br><span class="line"></span><br><span class="line">mount -t cifs -o username=logs,password=123456 <span class="string">//192.168.4.165/logs</span> <span class="string">/data/logs/datag_jd_catch/4.165</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">**其他服务**</span><br><span class="line"></span><br><span class="line"><span class="comment"># keepalived</span></span><br><span class="line">开机自启动</span><br><span class="line"></span><br><span class="line"><span class="comment"># nginx</span></span><br><span class="line">$ sudo service nginx start</span><br><span class="line"></span><br><span class="line"><span class="comment"># haproxy</span></span><br><span class="line">$ sudo service haproxy start</span><br><span class="line"></span><br><span class="line"><span class="comment"># samba</span></span><br><span class="line">$ sudo docker start samba</span><br><span class="line"></span><br><span class="line"><span class="comment"># iptables</span></span><br><span class="line">$ sudo bash <span class="string">/data/conf/kube_conf/scripts/accept.sh</span> &gt; <span class="string">/dev/null</span> 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 短信网关</span></span><br><span class="line">nohup <span class="string">/home/ubuntu/xdgc_sms/bin/exec.sh</span> &amp;</span><br></pre></td></tr></table></figure>
+<p><code>k8s-master2</code><br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 挂载</span></span><br><span class="line">/usr/bin/mfsmount -o nonempty /data -H mfsmaster</span><br><span class="line"></span><br><span class="line">mount -t nfs -o rw,hard,nointr,noac,<span class="attribute">vers</span>=3,rsize=32768,wsize=32768 192.168.5.50:/mnt/nfs/logs /data/logs</span><br><span class="line"></span><br><span class="line"><span class="comment"># haproxy</span></span><br><span class="line">$ sudo<span class="built_in"> service </span>haproxy start</span><br><span class="line"></span><br><span class="line"><span class="comment"># nginx</span></span><br><span class="line">$ sudo<span class="built_in"> service </span>nginx start</span><br><span class="line"></span><br><span class="line"><span class="comment"># iptables</span></span><br><span class="line">$ sudo bash /data/conf/kube_conf/scripts/accept.sh &gt; /dev/<span class="literal">null</span> 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure></p>
+<p><code>node， harbor(5.37)， standalone(5.70)</code></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 挂载</span></span><br><span class="line">/usr/bin/mfsmount -o nonempty /data -H mfsmaster</span><br><span class="line"></span><br><span class="line">mount -t nfs -o rw,hard,nointr,noac,vers=<span class="number">3</span>,rsize=<span class="number">32768</span>,wsize=<span class="number">32768</span> <span class="number">192.168</span>.<span class="number">5.50</span><span class="symbol">:/mnt/nfs/logs</span> /data/logs</span><br><span class="line"></span><br><span class="line"><span class="comment"># iptables</span></span><br><span class="line"><span class="variable">$ </span>sudo bash /data/conf/kube_conf/scripts/accept.sh &gt; <span class="regexp">/dev/null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+<p><code>192.168.4.41  192.168.4.42 192.168.5.46 192.168.5.43</code><br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># iptables</span></span><br><span class="line">$ sudo bash <span class="meta-keyword">/data/</span>conf/kube_conf<span class="meta-keyword">/scripts/</span>accept.sh &gt; <span class="meta-keyword">/dev/</span>null <span class="number">2</span>&gt;<span class="variable">&amp;1</span> &amp;</span><br></pre></td></tr></table></figure></p>
+<h2 id="6-crowd"><a href="#6-crowd" class="headerlink" title="6.crowd"></a>6.crowd</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> nginx</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo service nginx start</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> crowd</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo bash /data/atlassian/atlassian-crowd-2.7.2/start_crowd.sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> confluence</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo bash /data/atlassian/confluence/bin/startup.sh</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> jira</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo bash /data/atlassian/atlassian-jira-6.3.12-standalone/bin/startup.sh</span></span><br></pre></td></tr></table></figure>
+<h2 id="7-maven-nexus仓库"><a href="#7-maven-nexus仓库" class="headerlink" title="7. maven/nexus仓库"></a>7. maven/nexus仓库</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">192.168</span><span class="number">.4</span><span class="number">.107</span></span><br><span class="line">$ /data/nexus<span class="number">-2.8</span><span class="number">.1</span><span class="number">-01</span>/bin/nexus start</span><br></pre></td></tr></table></figure>
+<h2 id="8-haproxy"><a href="#8-haproxy" class="headerlink" title="8. haproxy"></a>8. haproxy</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 192.168.4.49</span></span><br><span class="line">$ sudo<span class="built_in"> service </span>haproxy start</span><br></pre></td></tr></table></figure>
+<h2 id="故障解决"><a href="#故障解决" class="headerlink" title="故障解决"></a>故障解决</h2><p>1.k8s故障<br>etcd集群，flanneld，127.0.0.1端口访问，服务访问故障（服务没启动）</p>
+<p>2.mfs故障<br>挂载失败，找不到文件等<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mfsfileinfo application.properties</span></span><br></pre></td></tr></table></figure></p>
+<p>3.zk故障<br>没有启动zk-web</p>
+<p>4.网络故障<br>iptables  flanneld重启</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    周琳
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhoul.cc/blog/测试环境重启.html" title="测试环境重启">http://zhoul.cc/blog/测试环境重启.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/lamba函数.html" rel="next" title="lamba表达式">
+                <i class="fa fa-chevron-left"></i> lamba表达式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/promethes.html" rel="prev" title="promethes">
+                promethes <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="hypercomments_widget"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">周琳</p>
+              <p class="site-description motion-element" itemprop="description">我们有梦想，所以很抽象</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动步骤"><span class="nav-number">1.</span> <span class="nav-text">启动步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-启动DNS"><span class="nav-number">1.1.</span> <span class="nav-text">1.启动DNS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-mfs和nfs"><span class="nav-number">2.</span> <span class="nav-text">2.mfs和nfs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-jenkins-web"><span class="nav-number">3.</span> <span class="nav-text">3. jenkins-web</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-启动基础服务"><span class="nav-number">4.</span> <span class="nav-text">4.启动基础服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis"><span class="nav-number">4.1.</span> <span class="nav-text">redis</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mongo"><span class="nav-number">5.</span> <span class="nav-text">mongo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rabbitmq"><span class="nav-number">6.</span> <span class="nav-text">rabbitmq</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql"><span class="nav-number">7.</span> <span class="nav-text">mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#zookeeper"><span class="nav-number">8.</span> <span class="nav-text">zookeeper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-k8s集群"><span class="nav-number">9.</span> <span class="nav-text">5. k8s集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-crowd"><span class="nav-number">10.</span> <span class="nav-text">6.crowd</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-maven-nexus仓库"><span class="nav-number">11.</span> <span class="nav-text">7. maven/nexus仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-haproxy"><span class="nav-number">12.</span> <span class="nav-text">8. haproxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#故障解决"><span class="nav-number">13.</span> <span class="nav-text">故障解决</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">周琳</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 102244, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 102244, xid: "/blog/测试环境重启.html"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/102244/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'n1wjyHMLrK5moE2IcH70gA6Y-gzGzoHsz',
+        appKey: '4yiPMwbzLjT5mWdziWWXavk1',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

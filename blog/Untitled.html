@@ -7,8 +7,6 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 
-<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
-
 
 <head>
   <meta charset="UTF-8"/>
@@ -72,7 +70,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="防火墙," />
 
 
 
@@ -85,12 +83,13 @@
 
 
 
-<meta name="description" content="1.Netfilter/Iptables通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。   Netfilter：主要是由内核模块来实现，工作在内核空间，是 Linux 核心中的一个通用架构。在这个框架上实现包过滤、NAT（网络地址转换）等模块功能，采用这样的模块化设计，使其拥有更好的扩展性和较强的灵活性。">
+<meta name="description" content="1.Netfilter/Iptables通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。背景颜色   Netfilter：主要是由内核模块来实现，工作在内核空间，是 Linux 核心中的一个通用架构。在这个框架上实现包过滤、NAT（网络地址转换）等模块功能，采用这样的模块化设计，使其拥有更好的扩展性和较强的灵活性。">
+<meta name="keywords" content="防火墙">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iptables">
 <meta property="og:url" content="http://zhoul.cc/blog/Untitled.html">
 <meta property="og:site_name" content="Supreme">
-<meta property="og:description" content="1.Netfilter/Iptables通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。   Netfilter：主要是由内核模块来实现，工作在内核空间，是 Linux 核心中的一个通用架构。在这个框架上实现包过滤、NAT（网络地址转换）等模块功能，采用这样的模块化设计，使其拥有更好的扩展性和较强的灵活性。">
+<meta property="og:description" content="1.Netfilter/Iptables通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。背景颜色   Netfilter：主要是由内核模块来实现，工作在内核空间，是 Linux 核心中的一个通用架构。在这个框架上实现包过滤、NAT（网络地址转换）等模块功能，采用这样的模块化设计，使其拥有更好的扩展性和较强的灵活性。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://zhoul.cc/images/1135081470275678415-wm.png">
 <meta property="og:image" content="http://zhoul.cc/images/1135081470275751536-wm.png">
@@ -103,10 +102,10 @@
 <meta property="og:image" content="http://zhoul.cc/images/zl.png">
 <meta property="og:image" content="http://zhoul.cc/images/QQ图片20180720161646.png">
 <meta property="og:image" content="http://zhoul.cc/images/zli.png">
-<meta property="og:updated_time" content="2018-07-20T12:11:32.032Z">
+<meta property="og:updated_time" content="2018-08-03T11:53:06.452Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iptables">
-<meta name="twitter:description" content="1.Netfilter/Iptables通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。   Netfilter：主要是由内核模块来实现，工作在内核空间，是 Linux 核心中的一个通用架构。在这个框架上实现包过滤、NAT（网络地址转换）等模块功能，采用这样的模块化设计，使其拥有更好的扩展性和较强的灵活性。">
+<meta name="twitter:description" content="1.Netfilter/Iptables通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。背景颜色   Netfilter：主要是由内核模块来实现，工作在内核空间，是 Linux 核心中的一个通用架构。在这个框架上实现包过滤、NAT（网络地址转换）等模块功能，采用这样的模块化设计，使其拥有更好的扩展性和较强的灵活性。">
 <meta name="twitter:image" content="http://zhoul.cc/images/1135081470275678415-wm.png">
 
 
@@ -204,6 +203,16 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -313,7 +322,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-20T14:20:07+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-20T14:20:00+08:00">
                 2018-07-20
               </time>
             
@@ -323,6 +332,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -363,7 +394,7 @@
       
 
       
-        <h2 id="1-Netfilter-Iptables"><a href="#1-Netfilter-Iptables" class="headerlink" title="1.Netfilter/Iptables"></a>1.Netfilter/Iptables</h2><p>通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。</p>
+        <h2 id="1-Netfilter-Iptables"><a href="#1-Netfilter-Iptables" class="headerlink" title="1.Netfilter/Iptables"></a>1.Netfilter/Iptables</h2><p>通常我们所说的 Linux 防火墙是指 Linux 内核集成的 IP 信息包过滤系统—— Netfilter/iptables 。<br>背景颜色</p>
 <blockquote>
 <ul>
 <li>Netfilter：主要是由内核模块来实现，工作在内核空间，是 Linux 核心中的一个通用架构。在这个框架上实现包过滤、NAT（网络地址转换）等模块功能，采用这样的模块化设计，使其拥有更好的扩展性和较强的灵活性。</li>
@@ -693,6 +724,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/防火墙/" rel="tag"># 防火墙</a>
+          
+        </div>
+      
 
       
       
@@ -803,7 +840,25 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
             
 
           </nav>
@@ -925,11 +980,12 @@
   
 
 
+
+
+
+
   
-
-
-
-
+  
 
 
 
@@ -969,7 +1025,12 @@
 
   
   
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
   
 
 

@@ -7,8 +7,6 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 
-<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
-
 
 <head>
   <meta charset="UTF-8"/>
@@ -72,7 +70,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="版本管理," />
 
 
 
@@ -86,6 +84,7 @@
 
 
 <meta name="description" content="一.日常使用手册 1.创建svn项目1# svnadmin create /data/svn/newproject        --svn项目：newproject 2.创建用户1# htpasswd /data/svnauth/passwd newuser       --用户：newuser 3.配置仓库权限1234567891011# vim /data/svnauth/authz[gro">
+<meta name="keywords" content="版本管理">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SVN">
 <meta property="og:url" content="http://zhoul.cc/blog/hello-world.html">
@@ -96,7 +95,7 @@
 <meta property="og:image" content="http://zhoul.cc/images/1531725835361.jpg">
 <meta property="og:image" content="http://zhoul.cc/images/1531726817825.jpg">
 <meta property="og:image" content="http://zhoul.cc/images/1531726675853.jpg">
-<meta property="og:updated_time" content="2018-07-18T10:47:45.214Z">
+<meta property="og:updated_time" content="2018-08-03T11:51:20.832Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SVN">
 <meta name="twitter:description" content="一.日常使用手册 1.创建svn项目1# svnadmin create /data/svn/newproject        --svn项目：newproject 2.创建用户1# htpasswd /data/svnauth/passwd newuser       --用户：newuser 3.配置仓库权限1234567891011# vim /data/svnauth/authz[gro">
@@ -197,6 +196,16 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -427,6 +436,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/版本管理/" rel="tag"># 版本管理</a>
+          
+        </div>
+      
 
       
       
@@ -446,8 +461,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/blog/Untitled.html" rel="prev" title="iptables">
-                iptables <i class="fa fa-chevron-right"></i>
+              <a href="/blog/lamba函数.html" rel="prev" title="lamba表达式">
+                lamba表达式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -521,14 +536,32 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
             
 
           </nav>
@@ -634,11 +667,12 @@
   
 
 
+
+
+
+
   
-
-
-
-
+  
 
 
 
@@ -678,7 +712,12 @@
 
   
   
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
   
 
 
@@ -751,6 +790,28 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'n1wjyHMLrK5moE2IcH70gA6Y-gzGzoHsz',
+        appKey: '4yiPMwbzLjT5mWdziWWXavk1',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 

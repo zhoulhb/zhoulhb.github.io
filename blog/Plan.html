@@ -7,8 +7,6 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 
-<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
-
 
 <head>
   <meta charset="UTF-8"/>
@@ -72,7 +70,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="中间件," />
 
 
 
@@ -86,13 +84,14 @@
 
 
 <meta name="description" content="创建用户（如果没有的话） 1# rabbitmqctl  add_user test 123456                 --用户：test，密码：123456 创建虚拟主机1# rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host 查看虚拟主机列表1# rabbitmqctl list_vhosts 配置">
+<meta name="keywords" content="中间件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="rabbitmq添加虚拟主机">
 <meta property="og:url" content="http://zhoul.cc/blog/Plan.html">
 <meta property="og:site_name" content="Supreme">
 <meta property="og:description" content="创建用户（如果没有的话） 1# rabbitmqctl  add_user test 123456                 --用户：test，密码：123456 创建虚拟主机1# rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host 查看虚拟主机列表1# rabbitmqctl list_vhosts 配置">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-18T10:15:38.606Z">
+<meta property="og:updated_time" content="2018-08-03T11:52:16.912Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rabbitmq添加虚拟主机">
 <meta name="twitter:description" content="创建用户（如果没有的话） 1# rabbitmqctl  add_user test 123456                 --用户：test，密码：123456 创建虚拟主机1# rabbitmqctl add_vhost test_host                   --虚拟主机名：test_host 查看虚拟主机列表1# rabbitmqctl list_vhosts 配置">
@@ -192,6 +191,16 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -312,6 +321,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/服务/" itemprop="url" rel="index">
+                    <span itemprop="name">服务</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -388,6 +419,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/中间件/" rel="tag"># 中间件</a>
+          
+        </div>
       
 
       
@@ -479,14 +516,32 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
             
 
           </nav>
@@ -592,11 +647,12 @@
   
 
 
+
+
+
+
   
-
-
-
-
+  
 
 
 
@@ -636,7 +692,12 @@
 
   
   
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/canvas_lines.min.js"></script>
   
 
 
@@ -709,6 +770,28 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'n1wjyHMLrK5moE2IcH70gA6Y-gzGzoHsz',
+        appKey: '4yiPMwbzLjT5mWdziWWXavk1',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
